@@ -1,6 +1,17 @@
 ### Washington, DC - 311 Requests
-The city of Washington, DC provides 311 as a phone number and request system for city services. 
+The city of Washington, DC provides 311 as a phone number and request system for city services. This project aims to address the following questions:
+> - What variables are most relevant when predicting 311 needs across time and ward?
+> - Can non-ward, non-tract groupings of 311 request areas be observed?
+> - What other patterns do we see in 311 requests, and what can we infer from these patterns about city service responsiveness?
 
+Navigate to a specific section using the links below.<br>
+[Introduction](#introduction)<br>
+[Data Cleansing and Analysis](#data-cleansing-and-analysis)
+
+
+
+
+# Introduction
 From the [DC 311 website](https://ouc.dc.gov/page/311-city-services): 
 > Examples of typical 311 calls include:
 
@@ -21,7 +32,7 @@ Along with the 311 call center, DC also offers an [online 311 portal](https://31
 
 /// EDA across wards, request type by ward, demographics per ward, average response time etc. 
 
-#### Data Cleansing and Analysis
+# Data Cleansing and Analysis
 ##### Building the Dataset
 The first step to analyzing 311 requests across wards was joining the data with American Community Survey data on demographics, socioeconomic characteristics, and housing information across the city's wards. Because this data is based on Census tracts, the Census tract for each address with a 311 request in the system first had to be retrieved via the Census API. 
 
