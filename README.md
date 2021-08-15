@@ -35,6 +35,13 @@ The American Community Survey (ACS) is the nation's largest survey of demographi
 DC's open data portal also provides visualizations of this data as a standalone dataset - see an example below.<br />
 ![A map of ACS Housing Characteristics for Washington DC](https://github.com/hannahelihannah/311_requests/blob/efdc69d404b1ac9c206409e5d2e36b8d6868a50b/ACS%20DC%20Housing%20Tract.PNG "ACS Housing DC")
 <br />
-It's worth noting that there are criticisms of the use of Census and ACS data in the social sciences. 
+It's worth noting that there are criticisms of the use of Census and ACS data in the social sciences. Researchers identify three key issues with the data:
+> - Undercounting non-immigrant or other at-risk populations
+> - Declining response rates over time lead to high variability for salary ranges and other variables
+> - Using tracts as proxies for neighborhoods decreases our understanding of how cities function & how residents get access to services.
+
+For the purposes of this project, the first and second criticisms are of greatest interest. For more detail on the third challenge, see Brown University's John Logan's overview for the American Sociological Association [here](https://www.asanet.org/sites/default/files/attach/journals/sept18ccfeaturecombined.pdf). 
+
+/// More on how these challenges were addressed in this project. 
 
 
