@@ -38,7 +38,7 @@ Along with the 311 call center, DC also offers an [online 311 portal](https://31
 # Data Cleansing and Analysis
 
 ##### Building the Dataset
-The first step to analyzing 311 requests across wards was joining the data with American Community Survey data on demographics, socioeconomic characteristics, and housing information across the city's wards. Because this data is based on Census tracts, the Census tract for each address with a 311 request in the system first had to be retrieved via the Census API. 
+The first step to analyzing 311 requests across wards was joining the data with American Community Survey data on demographics, socioeconomic characteristics, and housing information across the city's wards. Because this data is based on Census tracts, the Census tract for each address with a 311 request in the system first had to be retrieved via the Census API. NOTE: Though updated 2020 Census tracts were released on August 12, 2021, this project uses 2010 tracts. This may be updated in a future release.
 
 1. ACS Data <br />
 The American Community Survey (ACS) is the nation's largest survey of demographic and housing data. When used in tandem with Census information, it can be used to understand demographic changes over time. The survey is conducted by the Census Bureau, though is conducted separately from the actual Census. <br /> The ACS is one of many surveys run by the Census Bureau each year. It differs from the decennial Census in that it's conducted on a sample of households each month of the year to provide up-to-date data to state and local leaders and asks questions that would not appear on the Census, such as internet access and transportation. ACS questions from 2021 and before can be found on their site [here](https://www.census.gov/programs-surveys/acs/methodology/questionnaire-archive.html). <br /> ACS data is available via API from the Census.gov site, but for this project, it was downloaded directly from the [Washington DC Open Data portal](https://opendata.dc.gov/). <br /> The following ACS files were downloaded on July 2, 2021 and used in this project:
@@ -60,6 +60,13 @@ For the purposes of this project, the first and second criticisms are of greates
 /// More on how these challenges were addressed in this project. 
 <br>
 [Back to top &#8593;](#washington-dc-311-requests-)
+2. 311 Data
+
+
+# Predicting 311 Needs by Tract and Time
+# Creating Non-Ward, Non-Tract Clusters
+# Additional Patterns and Observations
+
 
 
 
