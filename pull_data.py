@@ -1,15 +1,24 @@
 # Import packages
+import codecs
 import json
-import logging
+import io
+from typing import Callable, Coroutine, List
+import concurrent
+from concurrent.futures import ThreadPoolExecutor
+import asyncio
+import math
 import os.path
 import random
 from os import path
+
+import aiohttp
 import numpy as np
 from tqdm import tqdm
 import time
 import pandas as pd
 from datetime import datetime
 import requests
+import multiprocessing
 from multiprocessing import Pool, Manager, cpu_count
 from functools import partial
 
@@ -21,85 +30,53 @@ def get_api_url(lat, long):
                           f'benchmark=Public_AR_Census2020&vintage=Census2020_Census2020&' \
                           f'layers=10&format=json'
 
-def get_tract_multiprocess(listManager = None, process = 0):
-    global tract
-    info = None
-    resolved = False
-    url = listManager[process]
+##### TESTING OUT THE THREADED FUNCTION HERE
+async def http_get(session: aiohttp.ClientSession, url: str) -> Coroutine:
+    UTF8DECODER = codecs.getincrementaldecoder('utf-8')(errors='strict')
+    r = await session.get(url)
+    stream = r.content
+    while not stream.at_eof():
+        data = await stream.read()
+        T = json.loads(UTF8DECODER.decode(data))
+        try:
+            tract = T['result']['geographies']['Census Blocks'][0]['TRACT']
+        except:
+            tract = np.nan
+        # ['result']['addressMatches'][0]['geographies']['Census Blocks'][0]
+        # https://stackoverflow.com/questions/35036921/asyncio-decode-utf-8-with-streamreader
+        # tract = res
 
-    try:
-        while not resolved:
-            res = None
-            tooManyCalls = False
+        return tract
 
-            try:
-                res = json.loads(requests.get(url).content.decode('utf-8'))
+async def fetch_tracts_async(url_column: List, inner: Callable):
+    async with aiohttp.ClientSession() as session:
+        tasks = []
+        for url in url_column:
+            tasks.append(
+                inner(
+                    session,
+                    url
+                )
+            )
+        responses = await asyncio.gather(*tasks, return_exceptions = True)
+        return responses
 
-                if res == 'Not Found':
-                    resolved = True
-                    break
 
-            except Exception as e:
-                print(e)
-                if e == 'too many calls':
-                    tooManyCalls = True
+def get_tracts(df, url_col):
+    urls = df[url_col]
+    responses = asyncio.get_event_loop().run_until_complete(fetch_tracts_async(urls, http_get))
+    return responses
 
-            if tooManyCalls:
-                time.sleep(30)
 
-            elif res.status_code < 300:
-                tract = res['result']['addressMatches'][0]['geographies']['Census Blocks'][0]
-                resolved = True
-            elif res.status_code == 429:
-                print(res.status_code)
-                time.sleep(30)
-            else:
-                print(res.status_code)
-                sleep_val = random.randint(1,10)
-                time.sleep(sleep_val)
+    # Get the content from the request
+    # https://towardsdatascience.com/part-1-defining-and-timing-an-api-function-with-python-b0849775e961
+    # https://towardsdatascience.com/python-requests-api-70a555fecc97
 
-    except Exception as e:
-        print(e)
-
-    finally:
-        if info != None:
-            listManager.append(info)
-            time.sleep(0.5)
-            return
-        else:
-            return np.nan
-
-def run_tract_multiprocess(links_column):
-    # Identify number of workers
-    workers = max(cpu_count()-1, 1)
-
-    # Create pool
-    manager = Manager()
-
-    # Get list manager to retrieve all values
-    tractManager = manager.list()
-    pool = Pool(workers)
-
-    try:
-        links = links_column
-        final_tract = partial(get_tract_multiprocess, tractManager, links)
-        for _ in tqdm(pool.imap(final_tract,
-                                list(range(0, len(links)))),
-                                total=len(links)):
-            pass
-        pool.close()
-        pool.join()
-    finally:
-        pool.close()
-        pool.join()
-
-    tract_list = list(tractManager)
-    df_tract = pd.DataFrame(tract_list)
-    return df_tract
+# https://dmort-ca.medium.com/part-4-async-api-requests-with-python-and-httpx-9dcd630bc9b5
 
 def main():
     ## Get tract API urls
-  return 'no'
+  return 'Not quite done'
 
 
 if __name__ == '__main__':
@@ -150,12 +127,22 @@ if __name__ == '__main__':
     tract_time = datetime.now()
     if 'tract_url' in all_311.columns:
         print(f'Starting process to get 311 multiprocess at {tract_url_time}.')
-        tracts = run_tract_multiprocess(all_311['tract_url'])
+        all_311['tract'] = get_tracts(all_311, 'tract_url')
     else:
         all_311['tract_url'] = all_311.apply(lambda x: get_api_url(x['LATITUDE'], x['LONGITUDE']), axis=1)
         print(f'Retrieved all tract URLs in {(datetime.now() - tract_url_time).total_seconds()} seconds.') ## Currently taking about 2 mins
-        tracts = run_tract_multiprocess(all_311['tract_url'])
-        all_311.to_csv('all_311.csv', index=False)
+        print('Starting to retrieve all tracts...')
+        all_311.to_csv('all_311.csv')
+        all_311_splits = []
+        # Split dataframe into chunks and retrieve tracts
+        for x in np.array_split(all_311, 50, axis=0):
+            print(f'Retrieving tracs for slice {x}...')
+            x['tract'] = get_tracts(x, 'tract_url')
+            all_311_splits.append(x)
+        print('Finished retrieving tracts.')
+        all_311_splits = pd.concat(all_311_splits)
+        all_311_splits.to_csv('all_311_tracts.csv', index=False)
+
 
     print(f'Retrieved tracts in {(datetime.now()-tract_time).total_seconds()} seconds.')
 
