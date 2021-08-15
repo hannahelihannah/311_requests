@@ -32,3 +32,6 @@ The American Community Survey (ACS) is the nation's largest survey of demographi
 > - ACS_Economic_Characteristics_DC_Census_Tract
 > - ACS_Housing_Characteristics_DC_Census_Tract
 
+DC's open data portal also provides visualizations of this data as a standalone dataset - see an example below.
+
+
