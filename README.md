@@ -40,7 +40,7 @@ Along with the 311 call center, DC also offers an [online 311 portal](https://31
 ##### Building the Dataset
 The first step to analyzing 311 requests across wards was joining the data with American Community Survey data on demographics, socioeconomic characteristics, and housing information across the city's wards. Because this data is based on Census tracts, the Census tract for each address with a 311 request in the system first had to be retrieved via the Census API. NOTE: Though updated 2020 Census tracts were released on August 12, 2021, this project uses 2010 tracts. This may be updated in a future release.
 
-1. ACS Data <br />
+#### ACS Data <br />
 The American Community Survey (ACS) is the nation's largest survey of demographic and housing data. When used in tandem with Census information, it can be used to understand demographic changes over time. The survey is conducted by the Census Bureau, though is conducted separately from the actual Census. <br /> The ACS is one of many surveys run by the Census Bureau each year. It differs from the decennial Census in that it's conducted on a sample of households each month of the year to provide up-to-date data to state and local leaders and asks questions that would not appear on the Census, such as internet access and transportation. ACS questions from 2021 and before can be found on their site [here](https://www.census.gov/programs-surveys/acs/methodology/questionnaire-archive.html). <br /> ACS data is available via API from the Census.gov site, but for this project, it was downloaded directly from the [Washington DC Open Data portal](https://opendata.dc.gov/). <br /> The following ACS files were downloaded on July 2, 2021 and used in this project:
 > - ACS_Demographic_Characteristics_DC_Ward
 > - ACS_Social_Characteristics_DC_Ward
@@ -61,7 +61,8 @@ For the purposes of this project, the first and second criticisms are of greates
 <br>
 [Back to top &#8593;](#washington-dc-311-requests-)
 <br>
-2. 311 Data <br />
+
+#### 311 Data <br />
 
 In Washington DC, the 311 program helps residents make requests for assistance via city services. Because 311 is always open, DC residents can make requests to the 311 program, which is handled by the Office of Unified Communications, while they're on the go. 311 data is released publicly through Washington DC's Open Data portal, and is grouped into files based on when the requests were made. Users can download files of 311 requests in the last 30 days (35K requests as of this writing) and by year. Starting in 2016, the data changed format, so analysis was completed using data from 2016-2020 - over 1,600,000 311 requests. Key fields in the data are as follows:
 > - SERVICECODE: Unique alphanumeric code for service requested (STR)
