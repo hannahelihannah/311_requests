@@ -60,8 +60,19 @@ For the purposes of this project, the first and second criticisms are of greates
 /// More on how these challenges were addressed in this project. 
 <br>
 [Back to top &#8593;](#washington-dc-311-requests-)
-2. 311 Data
+<br>
+2. 311 Data <br> 
+In Washington DC, the 311 program helps residents make requests for assistance via city services. Because 311 is always open, DC residents can make requests to the 311 program, which is handled by the Office of Unified Communications, while they're on the go. 311 data is released publicly through Washington DC's Open Data portal, and is grouped into files based on when the requests were made. Users can download files of 311 requests in the last 30 days (35K requests as of this writing) and by year. Starting in 2016, the data changed format, so analysis was completed using data from 2016-2020 - over 1,600,000 311 requests. Key fields in the data are as follows:
+> - SERVICECODE: Unique alphanumeric code for service requested (STR)
+> - SERVICECODEDESCRIPTION: Longer description of service requested (STR)
+> - SERVICETYPECODEDESCRIPTION: Type grouping of service requested (STR)
+> - ORGANIZATIONACRONYM: City office assigned to the service request (STR)
+> - ADDDATE: Date and time of service request (DATETIME)
+> - RESOLUTIONDATE: Date and time of request closure (DATETIME)
+> - LATITUDE & LONGITUDE: Two fields representing the latitude and longitude of the request (FLOAT)
+> - WARD: Identification of the Ward # of the service request (INT, 1-8)
 
+Though other data fields such as ZIPCODE and XCOORD/YCOORD are present in the data, they are not used - LATITUDE and LONGITUDE provide a more reliable data point to link Census data.
 
 # Predicting 311 Needs by Tract and Time
 # Creating Non-Ward, Non-Tract Clusters
