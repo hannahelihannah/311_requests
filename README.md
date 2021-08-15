@@ -2,7 +2,7 @@
 
 The city of Washington, DC provides 311 as a phone number and request system for city services. This project aims to address the following questions:
 > - What variables are most relevant when predicting 311 needs across time and ward?
-> - Can non-ward, non-tract groupings of 311 request areas be observed?
+> - For 311 request purposes, can requestor segmentation add value? i.e. are certain blocks known for having tree-related requests? 
 > - What other patterns do we see in 311 requests, and what can we infer from these patterns about city service responsiveness?
 
 Navigate to a specific section using the links below.<br>
