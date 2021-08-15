@@ -36,7 +36,7 @@ Along with the 311 call center, DC also offers an [online 311 portal](https://31
 
 
 # Data Cleansing and Analysis
-<br />
+
 
 ## Building the Dataset <br />
 The first step to analyzing 311 requests across wards was joining the data with American Community Survey data on demographics, socioeconomic characteristics, and housing information across the city's wards. Because this data is based on Census tracts, the Census tract for each address with a 311 request in the system first had to be retrieved via the Census API. NOTE: Though updated 2020 Census tracts were released on August 12, 2021, this project uses 2010 tracts. This may be updated in a future release.
