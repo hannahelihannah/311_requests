@@ -1,26 +1,16 @@
 # Import packages
 import codecs
 import json
-import io
 from typing import Callable, Coroutine, List
-import concurrent
-from concurrent.futures import ThreadPoolExecutor
 import asyncio
-import math
-import os.path
-import random
 from os import path
 
 import aiohttp
 import numpy as np
-from tqdm import tqdm
-import time
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 from datetime import datetime
-import requests
-import multiprocessing
-from multiprocessing import Pool, Manager, cpu_count
-from functools import partial
 
 #### DEFINE FUNCTIONS
 
@@ -90,13 +80,6 @@ if __name__ == '__main__':
         .drop(columns=['CREATOR', 'EDITOR', 'CREATED', 'EDITED', 'SHAPEAREA', 'SHAPELEN'])
     print('Finished importing Census Tract files.')
 
-    # Import ACS Data Files
-    acs_ward_demo = pd.read_csv('ACS_Demographic_Characteristics_DC_Ward.csv')
-    acs_ward_soc = pd.read_csv('ACS_Social_Characteristics_DC_Ward.csv')
-    acs_trc_econ = pd.read_csv('ACS_Economic_Characteristics_DC_Census_Tract.csv')
-    acs_trc_hous = pd.read_csv('ACS_Housing_Characteristics_DC_Census_Tract.csv')
-    print('Finished importing ACS files by ward and tract.')
-
     # Import 311 Service Request Files
     fields = ['OBJECTID', 'SERVICECODE', 'SERVICECODEDESCRIPTION', 'SERVICETYPECODEDESCRIPTION',
               'ORGANIZATIONACRONYM', 'ADDDATE', 'RESOLUTIONDATE', 'SERVICEORDERSTATUS', 'PRIORITY',
@@ -116,7 +99,6 @@ if __name__ == '__main__':
 
         # Join all 311 dataframes together
         all_311 = pd.DataFrame().append([req_2020, req_2019, req_2018, req_2017, req_2016], ignore_index=True)
-        all_311.to_csv('all_311.csv', index=False)
         print('Joined 311 dataframes.')
 
         print(f'Finished importing all data files in {(datetime.now()-start_time).total_seconds()} seconds.')
@@ -127,26 +109,26 @@ if __name__ == '__main__':
     tract_time = datetime.now()
     if 'tract_url' in all_311.columns:
         print(f'Starting process to get 311 multiprocess at {tract_url_time}.')
-        all_311['tract'] = get_tracts(all_311, 'tract_url')
+        if 'tract' in all_311.columns:
+            print('Finished importing all data.')
+        else:
+            all_311['tract'] = get_tracts(all_311, 'tract_url')
     else:
         all_311['tract_url'] = all_311.apply(lambda x: get_api_url(x['LATITUDE'], x['LONGITUDE']), axis=1)
         print(f'Retrieved all tract URLs in {(datetime.now() - tract_url_time).total_seconds()} seconds.') ## Currently taking about 2 mins
         print('Starting to retrieve all tracts...')
-        all_311.to_csv('all_311.csv')
         all_311_splits = []
         # Split dataframe into chunks and retrieve tracts
         for x in np.array_split(all_311, 50, axis=0):
             print(f'Retrieving tracs for slice {x}...')
-            x['tract'] = get_tracts(x, 'tract_url')
+            x['tract'] = get_tracts(x, 'tract_url') # Taking about 4 hours right now
             all_311_splits.append(x)
         print('Finished retrieving tracts.')
         all_311_splits = pd.concat(all_311_splits)
-        all_311_splits.to_csv('all_311_tracts.csv', index=False)
-
+        all_311_splits.to_csv('all_311.csv', index=False)
+        all_311 = all_311_splits.copy()
 
     print(f'Retrieved tracts in {(datetime.now()-tract_time).total_seconds()} seconds.')
-
-
 
 print('Finished ')
 
