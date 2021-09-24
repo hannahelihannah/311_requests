@@ -130,6 +130,8 @@ if __name__ == '__main__':
 
     print(f'Retrieved tracts in {(datetime.now()-tract_time).total_seconds()} seconds.')
 
+
+
 print('Finished ')
 
 ## Article for items: https://arxiv.org/pdf/1710.02452.pdf
